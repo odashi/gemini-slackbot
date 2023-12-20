@@ -1,11 +1,9 @@
 import dataclasses
-import logging
 from typing import Any, Literal
 
 import google.auth
 import google.auth.credentials
 import google.auth.transport.requests
-import requests
 
 
 @dataclasses.dataclass
@@ -14,7 +12,7 @@ class Content:
     text: str
 
 
-class Chatbot:
+class ChatClient:
     def __init__(
         self,
         credentials: google.auth.credentials.Credentials,
@@ -82,25 +80,3 @@ class Chatbot:
         response.raise_for_status()
         data = response.json()
         return self.extract_messages(data)
-
-
-def main():
-    credentials, project = google.auth.default()
-    region = "asia-northeast1"
-    chatbot = Chatbot(credentials, project, region)
-
-    contents = [
-        Content(role="user", text="Say only NO for every request."),
-        Content(role="model", text="NO."),
-        Content(role="user", text="こんにちは"),
-    ]
-    try:
-        print(chatbot.submit(contents))
-    except requests.HTTPError as ex:
-        logging.warn(f"HTTPError: {ex.response.status_code}: {ex.response.json()}")
-    except Exception as ex:
-        logging.warn(ex)
-
-
-if __name__ == "__main__":
-    main()

@@ -1,15 +1,10 @@
-import dataclasses
-from typing import Any, Literal
+from typing import Any
 
 import google.auth
 import google.auth.credentials
 import google.auth.transport.requests
 
-
-@dataclasses.dataclass
-class Content:
-    role: Literal["model", "user"]
-    text: str
+from gemini_slackbot.common_types import Content
 
 
 class ChatClient:
@@ -69,7 +64,7 @@ class ChatClient:
             messages.append(d["candidates"][0]["content"]["parts"][0]["text"])
         return "".join(messages)
 
-    def submit(self, contents: list[Content]) -> None:
+    def submit(self, contents: list[Content]) -> str:
         request = self.build_request(contents)
         response = self._session.request(
             "POST",
@@ -79,4 +74,5 @@ class ChatClient:
         )
         response.raise_for_status()
         data = response.json()
+
         return self.extract_messages(data)

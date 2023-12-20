@@ -47,7 +47,7 @@ class ChatClient:
             "temperature": 0.5,
             "topP": 0.8,
             "topK": 40,
-            "maxOutputTokens": 256,
+            "maxOutputTokens": 1024,
             "stopSequences": [],
         }
 
